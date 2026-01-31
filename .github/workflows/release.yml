@@ -1,0 +1,62 @@
+name: Build and Release Proton Manager
+
+on:
+  push:
+    tags:
+      - 'v0.*' # Dispara apenas para tags que começam com v0
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    name: Build Linux Binary
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6.0.2
+
+      - name: Setup Go
+        uses: actions/setup-go@v6.2.0
+        with:
+          go-version: '1.25.6'
+
+      - name: Get Dependencies
+        run: |
+          go mod tidy
+          go get .
+
+      - name: Build Binary with Version Info
+        # Aqui injetamos a Tag e a Data dentro das variáveis do main.go
+        run: |
+          BUILD_DATE=$(date +'%Y-%m-%d')
+          go build -ldflags="-s -w -X 'main.version=${{ github.ref_name }}' -X 'main.date=$BUILD_DATE'" -o proton-manager main.go
+
+      - name: Generate Checksum
+        run: sha256sum proton-manager > checksum.txt
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2.5.0
+        with:
+          files: |
+            proton-manager
+            checksum.txt
+          name: Proton Manager ${{ github.ref_name }}
+          body: |
+            ## 🚧 Early Access (${{ github.ref_name }})
+            
+            Primeira versão pública do gerenciador.
+            
+            ### Como instalar:
+            ```bash
+            wget [https://github.com/$](https://github.com/$){{ github.repository }}/releases/download/${{ github.ref_name }}/proton-manager
+            chmod +x proton-manager
+            sudo mv proton-manager /usr/local/bin/
+            ```
+            
+            **Verificar versão:**
+            `proton-manager --version`
+          draft: false
+          prerelease: true # Marca como "Pre-release" no GitHub (amarelo) pois é v0
