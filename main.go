@@ -23,7 +23,7 @@ var (
 )
 
 const (
-	registryURL = "https://raw.githubusercontent.com/luizhanauer/proton-registry/main/api/smart_index.json"
+	registryURL = "https://luizhanauer.github.io/proton-registry/api/smart_index.json"
 	steamPath   = ".local/share/Steam/compatibilitytools.d"
 )
 
