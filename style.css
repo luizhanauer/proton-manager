@@ -1,0 +1,155 @@
+:root {
+  font-family: "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --color-bg: #121212;
+  --color-bg-light: #1e1e1e;
+  --color-bg-lighter: #2a2a2a;
+  --color-text: #e0e0e0;
+  --color-text-dim: #888;
+  --color-primary: #00ff7f; /* Verde Neon */
+  --color-primary-glow: rgba(0, 255, 127, 0.4);
+  --color-danger: #ff4136;
+  --color-danger-glow: rgba(255, 65, 54, 0.4);
+  --color-border: #333;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  overflow-y: scroll; /* Sempre mostra a barra de rolagem para evitar saltos */
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  padding: 2rem;
+  flex-grow: 1;
+}
+
+header {
+  background-color: var(--color-bg-light);
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--color-primary);
+  text-shadow: 0 0 5px var(--color-primary-glow);
+}
+
+footer {
+  background-color: var(--color-bg-light);
+  padding: 0.5rem 2rem;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.8rem;
+  color: var(--color-text-dim);
+  text-align: center;
+}
+
+.release-list {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.release-card {
+  background-color: var(--color-bg-light);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease-in-out;
+}
+
+.release-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 10px var(--color-primary-glow);
+}
+
+.release-card h2 {
+  margin: 0 0 0.5rem 0;
+  color: var(--color-text);
+}
+
+.release-info {
+  color: var(--color-text-dim);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  flex-grow: 1;
+}
+
+.release-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  flex-grow: 1;
+}
+
+.btn-install {
+  background-color: transparent;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  box-shadow: 0 0 3px var(--color-primary-glow), inset 0 0 3px var(--color-primary-glow);
+}
+
+.btn-install:hover:not(:disabled) {
+  background-color: var(--color-primary-glow);
+  color: white;
+  box-shadow: 0 0 12px var(--color-primary-glow), inset 0 0 8px var(--color-primary-glow);
+}
+
+.btn-uninstall {
+  background-color: transparent;
+  border: 1px solid var(--color-danger);
+  color: var(--color-danger);
+  box-shadow: 0 0 3px var(--color-danger-glow), inset 0 0 3px var(--color-danger-glow);
+}
+
+.btn-uninstall:hover:not(:disabled) {
+  background-color: var(--color-danger-glow);
+  color: white;
+  box-shadow: 0 0 12px var(--color-danger-glow), inset 0 0 8px var(--color-danger-glow);
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 5px;
+  background-color: var(--color-border);
+  border-radius: 5px;
+  margin-top: 1rem;
+  overflow: hidden;
+}
+
+.progress-bar-inner {
+  height: 100%;
+  background-color: var(--color-primary);
+  transition: width 0.2s ease-out;
+  box-shadow: 0 0 5px var(--color-primary-glow);
+}
