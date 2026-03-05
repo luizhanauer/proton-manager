@@ -1,64 +1,60 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
-# Garante que o script rode no diretório onde está localizado
-cd "$(dirname "$0")"
-
-# --- Configurações de Caminhos ---
+# 1. Configurações de Caminhos (Padrão XDG)
 BIN_DIR="$HOME/.local/bin"
 APPS_DIR="$HOME/.local/share/applications"
 ICONS_DIR="$HOME/.local/share/icons"
 FINAL_BIN="$BIN_DIR/proton-manager"
-DESKTOP_FILE="/tmp/protonmanager.desktop"
+DESKTOP_FILE="$APPS_DIR/proton-manager.desktop"
 
-echo ">>> 🚀 Instalando Proton Manager..."
+echo ">>> 🚀 Iniciando instalação do Proton Manager..."
 
-# 1. Preparação do ambiente
-mkdir -p "$BIN_DIR"
-mkdir -p "$APPS_DIR"
-mkdir -p "$ICONS_DIR"
+# 2. Garantir que os diretórios existam
+mkdir -p "$BIN_DIR" "$APPS_DIR" "$ICONS_DIR"
 
-# 2. Instalação do Binário
-if [ ! -f "bin/proton-manager" ]; then
-    echo "❌ Erro: Binário não encontrado na pasta extraída (bin/proton-manager)."
+# 3. Instalar o Binário (Caminho corrigido para bin/proton-manager)
+if [ -f "bin/proton-manager" ]; then
+    cp "bin/proton-manager" "$FINAL_BIN"
+    chmod +x "$FINAL_BIN"
+    echo "✅ Binário instalado em $FINAL_BIN"
+else
+    echo "❌ Erro: Arquivo 'bin/proton-manager' não encontrado."
     exit 1
 fi
 
-cp bin/proton-manager "$FINAL_BIN"
-chmod +x "$FINAL_BIN"
-
-# 3. Gerenciamento do Ícone
-# Se houver um ícone local, instalamos com um nome único para evitar conflitos
-ICON_PATH="applications-games" 
+# 4. Instalar o Ícone (Caminho corrigido para appicon.png)
 if [ -f "appicon.png" ]; then
-    cp appicon.png "$ICONS_DIR/proton-manager-icon.png"
-    # Usar o caminho absoluto ajuda o GNOME/KDE a localizar o arquivo fora do tema padrão
-    ICON_PATH="$ICONS_DIR/proton-manager-icon.png"
+    cp "appicon.png" "$ICONS_DIR/proton-manager.png"
+    ICON_PATH="$ICONS_DIR/proton-manager.png"
+    echo "✅ Ícone instalado em $ICONS_DIR"
+else
+    echo "⚠️ Aviso: appicon.png não encontrada. Usando ícone genérico."
+    ICON_PATH="applications-games"
 fi
 
-# 4. Criação do Atalho (.desktop)
-# Removido espaços desnecessários e garantido que o Icon aponte para o local correto
+# 5. Criar o Atalho (.desktop)
+# Adicionado StartupWMClass para garantir o ícone na dock durante a execução
 cat <<EOF > "$DESKTOP_FILE"
 [Desktop Entry]
 Type=Application
 Name=Proton Manager
-Comment=Gerenciador de versões customizadas do Proton-GE
+Comment=Gerenciador de versões Proton
 Exec="$FINAL_BIN"
 Icon=$ICON_PATH
 Terminal=false
-Categories=Utility;System;Game;
-Keywords=proton;steam;gaming;manager;
+Categories=Utility;Game;
+Keywords=proton;steam;manager;
 StartupNotify=true
+StartupWMClass=proton-manager
 EOF
 
-cp "$DESKTOP_FILE" "$APPS_DIR/protonmanager.desktop"
+chmod +x "$DESKTOP_FILE"
 
-# 5. Atualização dos Bancos de Dados do Sistema
-# Adicionado update-icon-cache para garantir que o sistema veja o novo ícone
+# 6. Atualizar Base de Dados e Cache de Ícones
 update-desktop-database "$APPS_DIR" 2>/dev/null || true
 gtk-update-icon-cache -f -t "$ICONS_DIR" 2>/dev/null || true
 
 echo "--------------------------------------------------------"
-echo "✅ Proton Manager instalado com sucesso!"
-echo "📂 Menu: Disponível em 'Mostrar Aplicativos'"
+echo "✨ Instalação concluída! Procure por 'Proton Manager' no menu."
 echo "--------------------------------------------------------"
