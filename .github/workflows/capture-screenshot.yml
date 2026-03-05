@@ -1,0 +1,73 @@
+name: Generate Portfolio Screenshots
+
+on: 
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Deploy to GitHub Pages"]
+    types:
+      - completed
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  screenshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: npm install playwright
+
+      - name: Install Playwright Browsers
+        run: npx playwright install chromium --with-deps
+
+      # Padrão: Pasta isolada na raiz, ignorada pelos bundlers
+      - name: Create Assets Directory
+        run: mkdir -p portfolio-assets
+
+      - name: Take Screenshots
+        env:
+          TARGET_URL: ${{ github.event.repository.homepage || format('https://github.com/{0}', github.repository) }}
+        run: |
+          node -e "
+          const { chromium } = require('playwright');
+          (async () => {
+            const browser = await chromium.launch();
+            const page = await browser.newPage();
+            
+            console.log('🌐 Acessando:', process.env.TARGET_URL);
+            await page.goto(process.env.TARGET_URL);
+            await page.waitForTimeout(2000); 
+
+            const takeShot = async (width, height, filename) => {
+              console.log(\`📸 Capturando \${width}x\${height} -> \${filename}\`);
+              await page.setViewportSize({ width, height });
+              await page.screenshot({ path: \`portfolio-assets/\${filename}\` });
+            };
+
+            await takeShot(1280, 720, 'screenshot.png');
+            await takeShot(1280, 520, 'screenshot_featured.png');
+            await takeShot(1000, 600, 'screenshot-desktop.png');
+            await takeShot(600, 1000, 'screenshot-mobile.png');
+
+            await browser.close();
+          })();
+          "
+
+      - name: Commit and Push to Main
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add portfolio-assets/
+          
+          git diff --staged --quiet || (git commit -m "chore(assets): atualizar screenshots para o portifolio [skip ci]" && git push origin main)

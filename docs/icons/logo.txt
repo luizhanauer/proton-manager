@@ -1,0 +1,37 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="baseGradient" x1="128" y1="160" x2="128" y2="240" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4A4A4A"/>
+      <stop offset="100%" stop-color="#1A1A1A"/>
+    </linearGradient>
+    
+    <linearGradient id="stickGradient" x1="110" y1="80" x2="146" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2D2D2D"/>
+      <stop offset="50%" stop-color="#666666"/>
+      <stop offset="100%" stop-color="#2D2D2D"/>
+    </linearGradient>
+
+    <radialGradient id="ballGradient" cx="115" cy="55" r="40" fx="115" fy="55" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FF5F5F"/>
+      <stop offset="70%" stop-color="#B30000"/>
+      <stop offset="100%" stop-color="#660000"/>
+    </radialGradient>
+
+    <ellipse id="shadow" cx="128" cy="230" rx="80" ry="20" fill="black" fill-opacity="0.3"/>
+  </defs>
+
+  <use href="#shadow" />
+
+  <rect x="48" y="160" width="160" height="70" rx="12" fill="url(#baseGradient)" />
+  <rect x="48" y="160" width="160" height="15" rx="8" fill="#5A5A5A" fill-opacity="0.5" />
+
+  <circle cx="170" cy="195" r="15" fill="#8B0000" />
+  <circle cx="170" cy="192" r="15" fill="#E60000" />
+  
+  <rect x="120" y="80" width="16" height="90" rx="4" fill="url(#stickGradient)" />
+  
+  <circle cx="128" cy="65" r="40" fill="url(#ballGradient)" />
+  <circle cx="110" cy="50" r="8" fill="white" fill-opacity="0.4" />
+
+  <ellipse cx="128" cy="165" rx="30" ry="10" fill="#222" />
+</svg>
