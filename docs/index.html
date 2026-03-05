@@ -1,310 +1,345 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proton-GE Manager</title>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/icons/logo.svg" />
+    <meta name="description" content="Gerenciador gráfico para instalar e gerenciar versões customizadas do Proton-GE de forma fácil e rápida no Linux." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proton Manager</title>
     <style>
-        :root {
-            --bg-gradient-start: #0f172a;
-            --bg-gradient-end: #1e1b4b;
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
-            --accent-color: #8b5cf6;
-            --accent-hover: #7c3aed;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --success-color: #10b981;
-        }
+      :root {
+        --bg-gradient-start: #0f172a;
+        --bg-gradient-end: #1e1b4b;
+        --text-primary: #f8fafc;
+        --text-secondary: #cbd5e1;
+        --accent-color: #8b5cf6;
+        --accent-hover: #7c3aed;
+        --glass-bg: rgba(255, 255, 255, 0.05);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --success-color: #10b981;
+      }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            position: relative;
-        }
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          Oxygen,
+          Ubuntu,
+          Cantarell,
+          "Open Sans",
+          "Helvetica Neue",
+          sans-serif;
+        background: linear-gradient(
+          135deg,
+          var(--bg-gradient-start),
+          var(--bg-gradient-end)
+        );
+        color: var(--text-primary);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+      }
 
-        /* Animação do Fundo */
-        #background-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
+      /* Animação do Fundo */
+      #background-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+      }
 
-        .floating-icon {
-            position: absolute;
-            font-size: 2rem;
-            opacity: 0.15;
-            animation: floatUp linear infinite;
-            filter: drop-shadow(0 0 10px rgba(255,255,255,0.2));
-        }
+      .floating-icon {
+        position: absolute;
+        font-size: 2rem;
+        opacity: 0.15;
+        animation: floatUp linear infinite;
+        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+      }
 
-        @keyframes floatUp {
-            0% {
-                transform: translateY(100vh) rotate(0deg) scale(0.8);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.15;
-            }
-            90% {
-                opacity: 0.15;
-            }
-            100% {
-                transform: translateY(-20vh) rotate(360deg) scale(1.2);
-                opacity: 0;
-            }
+      @keyframes floatUp {
+        0% {
+          transform: translateY(100vh) rotate(0deg) scale(0.8);
+          opacity: 0;
         }
-
-        /* Conteúdo Central */
-        .container {
-            position: relative;
-            z-index: 1;
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 3rem;
-            max-width: 700px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        10% {
+          opacity: 0.15;
         }
-
-        .icon-header {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            display: inline-block;
-            animation: bounce 2s infinite ease-in-out;
+        90% {
+          opacity: 0.15;
         }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        100% {
+          transform: translateY(-20vh) rotate(360deg) scale(1.2);
+          opacity: 0;
         }
+      }
 
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
-            letter-spacing: -0.025em;
+      /* Conteúdo Central */
+      .container {
+        position: relative;
+        z-index: 1;
+        background: var(--glass-bg);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        padding: 3rem;
+        max-width: 700px;
+        width: 90%;
+        text-align: center;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      }
+
+      .icon-header {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        display: inline-block;
+        animation: bounce 2s infinite ease-in-out;
+      }
+
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateY(0);
         }
-
-        p {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 2.5rem;
+        50% {
+          transform: translateY(-10px);
         }
+      }
 
-        /* Área do Comando */
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+      }
+
+      p {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 2.5rem;
+      }
+
+      /* Área do Comando */
+      .command-wrapper {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        padding: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2.5rem;
+        transition: all 0.3s ease;
+      }
+
+      .command-wrapper:hover {
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+
+      code {
+        font-family: "Courier New", Courier, monospace;
+        color: #a78bfa;
+        font-size: 1rem;
+        padding: 1rem;
+        overflow-x: auto;
+        white-space: nowrap;
+        text-align: left;
+        flex-grow: 1;
+      }
+
+      /* Scrollbar customizada para o código */
+      code::-webkit-scrollbar {
+        height: 6px;
+      }
+      code::-webkit-scrollbar-thumb {
+        background-color: var(--glass-border);
+        border-radius: 4px;
+      }
+
+      .btn-copy {
+        background: var(--accent-color);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          background 0.2s ease,
+          transform 0.1s ease;
+        margin-left: 1rem;
+        flex-shrink: 0;
+      }
+
+      .btn-copy:hover {
+        background: var(--accent-hover);
+      }
+
+      .btn-copy:active {
+        transform: scale(0.95);
+      }
+
+      .btn-copy.success {
+        background: var(--success-color);
+      }
+
+      /* Botão GitHub */
+      .btn-github {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        background: transparent;
+        color: var(--text-primary);
+        text-decoration: none;
+        padding: 0.75rem 2rem;
+        border: 1px solid var(--glass-border);
+        border-radius: 999px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-github:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+
+      .btn-github svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+      }
+
+      /* Responsividade */
+      @media (max-width: 600px) {
         .command-wrapper {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            padding: 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 2.5rem;
-            transition: all 0.3s ease;
+          flex-direction: column;
+          align-items: stretch;
         }
-
-        .command-wrapper:hover {
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        code {
-            font-family: 'Courier New', Courier, monospace;
-            color: #a78bfa;
-            font-size: 1rem;
-            padding: 1rem;
-            overflow-x: auto;
-            white-space: nowrap;
-            text-align: left;
-            flex-grow: 1;
-        }
-
-        /* Scrollbar customizada para o código */
-        code::-webkit-scrollbar {
-            height: 6px;
-        }
-        code::-webkit-scrollbar-thumb {
-            background-color: var(--glass-border);
-            border-radius: 4px;
-        }
-
         .btn-copy {
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s ease, transform 0.1s ease;
-            margin-left: 1rem;
-            flex-shrink: 0;
+          margin-left: 0;
+          margin-top: 0.5rem;
         }
-
-        .btn-copy:hover {
-            background: var(--accent-hover);
+        code {
+          padding: 0.5rem;
         }
-
-        .btn-copy:active {
-            transform: scale(0.95);
-        }
-
-        .btn-copy.success {
-            background: var(--success-color);
-        }
-
-        /* Botão GitHub */
-        .btn-github {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            background: transparent;
-            color: var(--text-primary);
-            text-decoration: none;
-            padding: 0.75rem 2rem;
-            border: 1px solid var(--glass-border);
-            border-radius: 999px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .btn-github:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .btn-github svg {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-        }
-
-        /* Responsividade */
-        @media (max-width: 600px) {
-            .command-wrapper {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .btn-copy {
-                margin-left: 0;
-                margin-top: 0.5rem;
-            }
-            code {
-                padding: 0.5rem;
-            }
-        }
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div id="background-canvas"></div>
 
     <main class="container">
-        <span class="icon-header">🐧</span>
-        <h1>Proton-GE Manager</h1>
-        <p>
-            Gerenciador gráfico para instalar e gerenciar versões customizadas do 
-            <strong>Proton-GE</strong> de forma fácil e rápida no Linux.
-        </p>
+      <span class="icon-header">🐧</span>
+      <h1>Proton Manager</h1>
+      <p>
+        Gerenciador gráfico para instalar e gerenciar versões customizadas do
+        <strong>Proton-GE</strong> de forma fácil e rápida no Linux.
+      </p>
 
-        <div class="command-wrapper">
-            <code id="command-text">curl -fsSL https://luizhanauer.github.io/proton-manager/get.sh | sh</code>
-            <button class="btn-copy" id="copy-btn" onclick="copyCommand()">Copiar</button>
-        </div>
+      <div class="command-wrapper">
+        <code id="command-text"
+          >curl -fsSL https://luizhanauer.github.io/proton-manager/get.sh |
+          sh</code
+        >
+        <button class="btn-copy" id="copy-btn" onclick="copyCommand()">
+          Copiar
+        </button>
+      </div>
 
-        <a href="https://github.com/luizhanauer/proton-manager" target="_blank" rel="noopener noreferrer" class="btn-github">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
-            </svg>
-            Repositório GitHub
-        </a>
+      <a
+        href="https://github.com/luizhanauer/proton-manager"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-github"
+      >
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+          />
+        </svg>
+        Repositório GitHub
+      </a>
     </main>
 
     <script>
-        /**
-         * Lida com a cópia do comando para a área de transferência
-         */
-        async function copyCommand() {
-            const textToCopy = document.getElementById('command-text').innerText;
-            const copyBtn = document.getElementById('copy-btn');
+      /**
+       * Lida com a cópia do comando para a área de transferência
+       */
+      async function copyCommand() {
+        const textToCopy = document.getElementById("command-text").innerText;
+        const copyBtn = document.getElementById("copy-btn");
 
-            try {
-                await navigator.clipboard.writeText(textToCopy);
-                
-                // Feedback visual de sucesso
-                const originalText = copyBtn.innerText;
-                copyBtn.innerText = 'Copiado!';
-                copyBtn.classList.add('success');
-                
-                // Retorna ao estado original após 2 segundos
-                setTimeout(() => {
-                    copyBtn.innerText = originalText;
-                    copyBtn.classList.remove('success');
-                }, 2000);
-            } catch (err) {
-                console.error('Falha ao copiar texto: ', err);
-                copyBtn.innerText = 'Erro';
-            }
+        try {
+          await navigator.clipboard.writeText(textToCopy);
+
+          // Feedback visual de sucesso
+          const originalText = copyBtn.innerText;
+          copyBtn.innerText = "Copiado!";
+          copyBtn.classList.add("success");
+
+          // Retorna ao estado original após 2 segundos
+          setTimeout(() => {
+            copyBtn.innerText = originalText;
+            copyBtn.classList.remove("success");
+          }, 2000);
+        } catch (err) {
+          console.error("Falha ao copiar texto: ", err);
+          copyBtn.innerText = "Erro";
         }
+      }
 
-        /**
-         * Gera o fundo animado com ícones retrô flutuantes
-         */
-        function createFloatingIcons() {
-            const canvas = document.getElementById('background-canvas');
-            const icons = ['🎮', '🎲', '👾', '🕹️', '🏆', '⚔️', '🛡️'];
-            const iconCount = 25; // Quantidade de ícones na tela
+      /**
+       * Gera o fundo animado com ícones retrô flutuantes
+       */
+      function createFloatingIcons() {
+        const canvas = document.getElementById("background-canvas");
+        const icons = ["🎮", "🎲", "👾", "🕹️", "🏆", "⚔️", "🛡️"];
+        const iconCount = 25; // Quantidade de ícones na tela
 
-            for (let i = 0; i < iconCount; i++) {
-                const span = document.createElement('span');
-                const randomIcon = icons[Math.floor(Math.random() * icons.length)];
-                
-                span.innerText = randomIcon;
-                span.classList.add('floating-icon');
-                
-                // Posição horizontal aleatória
-                span.style.left = `${Math.random() * 100}vw`;
-                
-                // Duração e atraso de animação aleatórios para um visual orgânico
-                const animationDuration = 10 + Math.random() * 15; // Entre 10s e 25s
-                const animationDelay = Math.random() * 10; // Atraso de 0s a 10s
-                
-                span.style.animationDuration = `${animationDuration}s`;
-                span.style.animationDelay = `${animationDelay}s`;
-                
-                // Tamanhos ligeiramente diferentes
-                const scale = 0.5 + Math.random() * 1.5;
-                span.style.fontSize = `${scale}rem`;
+        for (let i = 0; i < iconCount; i++) {
+          const span = document.createElement("span");
+          const randomIcon = icons[Math.floor(Math.random() * icons.length)];
 
-                canvas.appendChild(span);
-            }
+          span.innerText = randomIcon;
+          span.classList.add("floating-icon");
+
+          // Posição horizontal aleatória
+          span.style.left = `${Math.random() * 100}vw`;
+
+          // Duração e atraso de animação aleatórios para um visual orgânico
+          const animationDuration = 10 + Math.random() * 15; // Entre 10s e 25s
+          const animationDelay = Math.random() * 10; // Atraso de 0s a 10s
+
+          span.style.animationDuration = `${animationDuration}s`;
+          span.style.animationDelay = `${animationDelay}s`;
+
+          // Tamanhos ligeiramente diferentes
+          const scale = 0.5 + Math.random() * 1.5;
+          span.style.fontSize = `${scale}rem`;
+
+          canvas.appendChild(span);
         }
+      }
 
-        // Inicializa a animação assim que a página carrega
-        window.onload = createFloatingIcons;
+      // Inicializa a animação assim que a página carrega
+      window.onload = createFloatingIcons;
     </script>
-</body>
+  </body>
 </html>
