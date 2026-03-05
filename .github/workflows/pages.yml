@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'docs/**' # Dispara apenas se houver alterações na pasta web
+      - 'portfolio-assets/**' # Adicionado para disparar quando os assets mudarem
   workflow_dispatch:
 
 permissions:
@@ -26,6 +27,12 @@ jobs:
     steps:
       - name: 📥 Checkout do Código
         uses: actions/checkout@v4
+
+      - name: 🏗️ Compor Pasta de Documentação
+        run: |
+          # Garante que o destino existe e copia os assets para dentro de docs/portfolio-assets
+          mkdir -p ./docs/assets
+          cp -R ./portfolio-assets/* ./docs/assets/
 
       - name: ⚙️ Configurar Pages
         uses: actions/configure-pages@v5
